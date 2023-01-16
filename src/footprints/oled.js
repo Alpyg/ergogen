@@ -1,11 +1,13 @@
 module.exports = {
+    nets: {
+      SDA: undefined,
+      SCL: undefined,
+      VCC: 'VCC',
+      GND: 'GND'
+    },
     params: {
-        designator: 'OLED',
-        side: 'F',
-        VCC: {type: 'net', value: 'VCC'},
-        GND: {type: 'net', value: 'GND'},
-        SDA: undefined,
-        SCL: undefined
+      class: 'OLED',
+	    side: 'F'
     },
     body: p => `
         (module lib:OLED_headers (layer F.Cu) (tedit 5E1ADAC2)
@@ -17,13 +19,13 @@ module.exports = {
 
         ${'' /* pins */}
         (pad 4 thru_hole oval (at 1.6 2.18 ${p.rot+270}) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
-        ${p.SDA.str})
+        ${p.net.SDA.str})
         (pad 3 thru_hole oval (at 1.6 4.72 ${p.rot+270}) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
-        ${p.SCL.str})
+        ${p.net.SCL.str})
         (pad 2 thru_hole oval (at 1.6 7.26 ${p.rot+270}) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
-        ${p.VCC.str})
+        ${p.net.VCC.str})
         (pad 1 thru_hole rect (at 1.6 9.8 ${p.rot+270}) (size 1.7 1.7) (drill 1) (layers *.Cu *.Mask)
-        ${p.GND.str})
+        ${p.net.GND.str})
         )
         `
 }
