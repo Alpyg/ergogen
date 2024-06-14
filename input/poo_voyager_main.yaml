@@ -1,0 +1,261 @@
+points:
+  key:
+    padding: 19
+    spread: 19
+    bind: [1, 1]
+  zones:
+    main:
+      rows:
+        thumb:
+          key.row_net: row_thumb
+        inner:
+          key.row_net: row_inner
+        home:
+          key.row_net: row_home
+        outer:
+          key.row_net: row_outer
+        num:
+          key.row_net: row_num
+      columns:
+        mod:
+          rows.thumb.skip: true
+          key.col_net: col_mod
+        pinky:
+          rows.thumb.skip: true
+          key.col_net: col_pinky
+        ring:
+          rows.thumb.skip: true
+          key.stagger: .5cx
+          key.col_net: col_ring
+        middle:
+          key.col_net: col_middle
+        index:
+          key.col_net: col_index
+        far:
+          key.stagger: -0.2cx
+          key.col_net: col_far
+
+outlines:
+  _keys:
+    - what: rectangle
+      where: true
+      size: 17
+      fillet: 1
+  key_sockets:
+    - what: rectangle
+      where: true
+      size: 14
+      fillet: 1
+  base:
+    - what: rectangle
+      where: true
+      bound: true
+      size: 17
+      fillet: 1
+    - what: polygon
+      operation: add
+      fillet: 1
+      points:
+        - ref: main_middle_thumb
+          shift: [0, -9.5]
+        - ref: main_middle_thumb
+          shift: [-10, -9.5]
+        - ref: main_pinky_inner
+          shift: [10, -9.5]
+        - ref: main_pinky_inner
+          shift: [0, -9.5]
+        - ref: main_ring_inner
+          shift: [-10, -9]
+        - ref: main_ring_inner
+          shift: [10, -9]
+  pcb:
+    - what: outline
+      name: base
+    - what: polygon
+      operation: add
+      fillet: 1
+      points:
+        - ref: main_far_num
+          shift: [9, -4]
+        - ref: main_far_num
+          shift: [13.5, -4]
+        - ref: main_far_num
+          shift: [13.5, -28]
+        - ref: main_far_num
+          shift: [9, -28]
+  case:
+    - what: outline
+      name: base
+      fillet: 1
+    - what: polygon
+      operation: add
+      fillet: 1
+      points:
+        - ref: main_far_num
+          shift: [0, -4]
+        - ref: main_far_num
+          shift: [13.5+18, -4]
+        - ref: main_far_thumb
+          shift: [13.5+18, -9.5]
+        - ref: main_far_thumb
+          shift: [0, -9.5]
+  preview: [case, ^key_sockets]
+
+cases:
+  keys:
+    - what: outline
+      name: key_sockets
+      extrude: 1.3
+  case:
+    - what: outline
+      name: case
+      extrude: 1.3
+
+pcbs:
+  pcb:
+    outlines:
+      main:
+        outline: pcb
+    footprints:
+      choc:
+        what: choc
+        where: true
+        params:
+          from: "{{row}}_{{col_net}}"
+          to: "{{col_net}}"
+          reverse: true
+          hotswap: true
+      diodes:
+        what: diode
+        where: true
+        adjust:
+          shift: [-3.2, -4]
+          rotate: 90
+        params:
+          from: "{{row}}_{{col_net}}"
+          to: "{{key.row_net}}{{row_net}}"
+      diode_via:
+        what: via
+        where: true
+        adjust:
+          shift: [0, 3.6]
+        params:
+          net: "{{row}}_{{col_net}}"
+      col_via:
+        what: via
+        where: true
+        adjust:
+          shift: [0, 2.6]
+        params:
+          net: "{{col_net}}"
+      pcm12:
+        what: pcm12
+        where:
+          ref: main_far_home
+          shift: [22, 8.6]
+          rotate: 180
+        params:
+          reverse: true
+          from: POS
+          to: RAW
+      bat_connector:
+        what: bat
+        where:
+          ref: main_far_thumb
+          shift: [8, -8]
+        params:
+          raw: POS
+          neg: GND
+      mcu_bat:
+        what: bat
+        where:
+          ref: main_far_home
+          shift: [8, 8]
+        params:
+          raw: RAW
+          neg: GND
+      mcu:
+        what: promicro
+        where:
+          ref: main_far_outer
+          shift: [22, -7.4]
+          rotate: -90
+        params:
+          orientation: up
+      tht_col_far:
+        what: tht
+        where:
+          ref: main_far_num
+          shift: [11.5, -6]
+        params:
+          net: col_far
+      tht_col_index:
+        what: tht
+        where:
+          ref: main_far_num
+          shift: [11.5, -8]
+        params:
+          net: col_index
+      tht_col_middle:
+        what: tht
+        where:
+          ref: main_far_num
+          shift: [11.5, -10]
+        params:
+          net: col_middle
+      tht_col_ring:
+        what: tht
+        where:
+          ref: main_far_num
+          shift: [11.5, -12]
+        params:
+          net: col_ring
+      tht_col_pinky:
+        what: tht
+        where:
+          ref: main_far_num
+          shift: [11.5, -14]
+        params:
+          net: col_pinky
+      tht_col_mod:
+        what: tht
+        where:
+          ref: main_far_num
+          shift: [11.5, -16]
+        params:
+          net: col_mod
+      tht_row_num:
+        what: tht
+        where:
+          ref: main_far_num
+          shift: [11.5, -18]
+        params:
+          net: row_num
+      tht_row_outer:
+        what: tht
+        where:
+          ref: main_far_num
+          shift: [11.5, -20]
+        params:
+          net: row_outer
+      tht_row_home:
+        what: tht
+        where:
+          ref: main_far_num
+          shift: [11.5, -22]
+        params:
+          net: row_home
+      tht_row_inner:
+        what: tht
+        where:
+          ref: main_far_num
+          shift: [11.5, -24]
+        params:
+          net: row_inner
+      tht_row_thumb:
+        what: tht
+        where:
+          ref: main_far_num
+          shift: [11.5, -26]
+        params:
+          net: row_thumb
