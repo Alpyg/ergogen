@@ -4,10 +4,8 @@ points:
     spread: 19
     bind: [1, 1]
   zones:
-    main:
+    matrix:
       rows:
-        thumb:
-          key.row_net: row_thumb
         inner:
           key.row_net: row_inner
         home:
@@ -34,77 +32,90 @@ points:
         far:
           key.stagger: -0.2cx
           key.col_net: col_far
+    thumb:
+      anchor:
+        ref: matrix_middle_inner
+        shift: [5, -19]
+      columns:
+        near:
+          key.col_net: col_middle
+        home:
+          key.splay: -10
+          key.origin: [-11.75, -9]
+          key.col_net: col_index
+        far:
+          key.splay: -10
+          key.origin: [-9.5, -9]
+          key.col_net: col_far
+      rows:
+        thumb:
+          key.row_net: row_thumb
 
 outlines:
-  _keys:
+  keys:
     - what: rectangle
       where: true
       size: 17
       fillet: 1
-  key_sockets:
+  _key_sockets:
     - what: rectangle
       where: true
       size: 14
       fillet: 1
-  base:
+  _base:
     - what: rectangle
       where: true
       bound: true
       size: 17
       fillet: 1
-    - what: polygon
-      operation: add
-      fillet: 1
-      points:
-        - ref: main_middle_thumb
-          shift: [0, -9.5]
-        - ref: main_middle_thumb
-          shift: [-10, -9.5]
-        - ref: main_pinky_inner
-          shift: [10, -9.5]
-        - ref: main_pinky_inner
-          shift: [0, -9.5]
-        - ref: main_ring_inner
-          shift: [-10, -9]
-        - ref: main_ring_inner
-          shift: [10, -9]
   pcb:
     - what: outline
-      name: base
+      name: _base
     - what: polygon
       operation: add
       fillet: 1
       points:
-        - ref: main_far_num
-          shift: [9, -4]
-        - ref: main_far_num
-          shift: [13.5, -4]
-        - ref: main_far_num
-          shift: [13.5, -28]
-        - ref: main_far_num
-          shift: [9, -28]
+        - ref: matrix_far_inner
+          shift: [9.5, -28.5]
+        - ref: matrix_far_inner
+          shift: [-5cx, -28.5]
+        - ref: matrix_far_inner
+          shift: [-5cx, 0]
+        - ref: matrix_far_inner
+          shift: [9.5, 0]
+    - what: polygon
+      operation: subtract
+      fillet: 1
+      points:
+        - ref: matrix_mod_inner
+          shift: [-9.5, -9.5]
+        - ref: matrix_mod_inner
+          shift: [-9.5, -24]
+        - ref: matrix_mod_inner
+          shift: [-9.5+33, -24]
+        - ref: matrix_mod_inner
+          shift: [-9.5+33, -9.5]
+    - what: polygon
+      operation: subtract
+      fillet: 1
+      points:
+        - ref: matrix_ring_inner
+          shift: [-6.5+2.5, -11]
+        - ref: matrix_ring_inner
+          shift: [6.5+2.5, -11]
+        - ref: matrix_ring_inner
+          shift: [6.5+2.5, -32.5]
+        - ref: matrix_ring_inner
+          shift: [-6.5+2.5, -32.5]
   case:
     - what: outline
-      name: base
+      name: pcb
       fillet: 1
-    - what: polygon
-      operation: add
-      fillet: 1
-      points:
-        - ref: main_far_num
-          shift: [0, -4]
-        - ref: main_far_num
-          shift: [13.5+18, -4]
-        - ref: main_far_thumb
-          shift: [13.5+18, -9.5]
-        - ref: main_far_thumb
-          shift: [0, -9.5]
-  preview: [case, ^key_sockets]
 
 cases:
   keys:
     - what: outline
-      name: key_sockets
+      name: _key_sockets
       extrude: 1.3
   case:
     - what: outline
@@ -129,133 +140,189 @@ pcbs:
         what: diode
         where: true
         adjust:
-          shift: [-3.2, -4]
-          rotate: 90
+          shift: [0, -2.8]
+          rotate: 170
         params:
           from: "{{row}}_{{col_net}}"
           to: "{{key.row_net}}{{row_net}}"
-      diode_via:
-        what: via
-        where: true
-        adjust:
-          shift: [0, 3.6]
-        params:
-          net: "{{row}}_{{col_net}}"
-      col_via:
-        what: via
-        where: true
-        adjust:
-          shift: [0, 2.6]
-        params:
-          net: "{{col_net}}"
       pcm12:
         what: pcm12
         where:
-          ref: main_far_home
-          shift: [22, 8.6]
-          rotate: 180
+          ref: matrix_mod_inner
+          shift: [-7.9, 12]
+          rotate: -90
         params:
           reverse: true
-          from: POS
-          to: RAW
+          from: RAW
+          to: BAT+
       bat_connector:
         what: bat
         where:
-          ref: main_far_thumb
-          shift: [8, -8]
+          ref: matrix_mod_inner
+          shift: [-8, -8]
         params:
-          raw: POS
-          neg: GND
+          raw: RAW
+          neg: BAT-
       mcu_bat:
         what: bat
         where:
-          ref: main_far_home
-          shift: [8, 8]
+          ref: matrix_pinky_inner
+          shift: [0, -8]
         params:
-          raw: RAW
-          neg: GND
-      mcu:
-        what: promicro
-        where:
-          ref: main_far_outer
-          shift: [22, -7.4]
-          rotate: -90
-        params:
-          orientation: up
-      tht_col_far:
+          raw: BAT+
+          neg: BAT-
+      tht_col_mod_l:
         what: tht
         where:
-          ref: main_far_num
-          shift: [11.5, -6]
+          ref: matrix_ring_inner
+          shift: [-6.5, -29.22]
         params:
-          net: col_far
-      tht_col_index:
+          net: col_mod_mcu
+      tht_col_pinky_l:
         what: tht
         where:
-          ref: main_far_num
-          shift: [11.5, -8]
+          ref: matrix_ring_inner
+          shift: [-6.5, -26.68]
         params:
-          net: col_index
+          net: col_pinky_mcu
+      tht_col_ring_l:
+        what: tht
+        where:
+          ref: matrix_ring_inner
+          shift: [-6.5, -24.14]
+        params:
+          net: col_ring_mcu
       tht_col_middle:
         what: tht
         where:
-          ref: main_far_num
-          shift: [11.5, -10]
+          ref: matrix_ring_inner
+          shift: [-6.5, -21.6]
         params:
           net: col_middle
-      tht_col_ring:
+      tht_col_index:
         what: tht
         where:
-          ref: main_far_num
-          shift: [11.5, -12]
+          ref: matrix_ring_inner
+          shift: [-6.5, -19.06]
         params:
-          net: col_ring
-      tht_col_pinky:
+          net: col_index
+      tht_col_far:
         what: tht
         where:
-          ref: main_far_num
-          shift: [11.5, -14]
+          ref: matrix_ring_inner
+          shift: [-6.5, -16.52]
         params:
-          net: col_pinky
-      tht_col_mod:
-        what: tht
-        where:
-          ref: main_far_num
-          shift: [11.5, -16]
-        params:
-          net: col_mod
-      tht_row_num:
-        what: tht
-        where:
-          ref: main_far_num
-          shift: [11.5, -18]
-        params:
-          net: row_num
-      tht_row_outer:
-        what: tht
-        where:
-          ref: main_far_num
-          shift: [11.5, -20]
-        params:
-          net: row_outer
-      tht_row_home:
-        what: tht
-        where:
-          ref: main_far_num
-          shift: [11.5, -22]
-        params:
-          net: row_home
+          net: col_far
       tht_row_inner:
         what: tht
         where:
-          ref: main_far_num
-          shift: [11.5, -24]
+          ref: matrix_ring_inner
+          shift: [-6.5, -13.98]
         params:
           net: row_inner
+      tht_row_home:
+        what: tht
+        where:
+          ref: matrix_ring_inner
+          shift: [11.5, -13.98]
+        params:
+          net: row_home
+      tht_row_outer:
+        what: tht
+        where:
+          ref: matrix_ring_inner
+          shift: [11.5, -16.52]
+        params:
+          net: row_outer
+      tht_row_num:
+        what: tht
+        where:
+          ref: matrix_ring_inner
+          shift: [11.5, -19.06]
+        params:
+          net: row_num
       tht_row_thumb:
         what: tht
         where:
-          ref: main_far_num
-          shift: [11.5, -26]
+          ref: matrix_ring_inner
+          shift: [11.5, -21.6]
         params:
           net: row_thumb
+      tht_col_ring_r:
+        what: tht
+        where:
+          ref: matrix_ring_inner
+          shift: [11.5, -24.14]
+        params:
+          net: col_ring_mcu
+      tht_col_pinky_r:
+        what: tht
+        where:
+          ref: matrix_ring_inner
+          shift: [11.5, -26.68]
+        params:
+          net: col_pinky_mcu
+      tht_col_mod_r:
+        what: tht
+        where:
+          ref: matrix_ring_inner
+          shift: [11.5, -29.22]
+        params:
+          net: col_mod_mcu
+      jumber_col_mod_l:
+        what: jumper
+        where:
+          ref: matrix_ring_inner
+          shift: [-9.5, -29.22]
+          rotate: 180
+        params:
+          side: 'B'
+          from: col_mod_mcu
+          to: col_mod
+      jumber_col_mod_r:
+        what: jumper
+        where:
+          ref: matrix_ring_inner
+          shift: [14.5, -29.22]
+        params:
+          side: 'B'
+          from: col_mod_mcu
+          to: col_mod
+      jumber_col_pinky_l:
+        what: jumper
+        where:
+          ref: matrix_ring_inner
+          shift: [-9.5, -26.68]
+          rotate: 180
+        params:
+          side: 'B'
+          from: col_pinky_mcu
+          to: col_pinky
+      jumber_col_pinky_r:
+        what: jumper
+        where:
+          ref: matrix_ring_inner
+          shift: [14.5, -26.68]
+        params:
+          side: 'B'
+          from: col_pinky_mcu
+          to: col_pinky
+      jumber_col_ring_l:
+        what: jumper
+        where:
+          ref: matrix_ring_inner
+          shift: [-9.5, -24.14]
+          rotate: 180
+        params:
+          side: 'B'
+          from: col_ring_mcu
+          to: col_ring
+      jumber_col_ring_r:
+        what: jumper
+        where:
+          ref: matrix_ring_inner
+          shift: [14.5, -24.14]
+        params:
+          side: 'B'
+          from: col_ring_mcu
+          to: col_ring

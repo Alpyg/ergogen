@@ -1,0 +1,43 @@
+points:
+  key:
+    padding: 15
+    spread: 20
+  zones:
+    main:
+      rows:
+        1:
+        2:
+        3:
+        4:
+        5:
+        6:
+      columns:
+        1:
+        2:
+        3:
+        4:
+        5:
+
+outlines:
+  keys:
+    - what: rectangle
+      where: true
+      size: [19.0, 14.0]
+      fillet: 1
+
+pcbs:
+  pcb:
+    outlines:
+      main:
+        outline: keys
+    footprints:
+      choc:
+        what: amoeba_choc
+        where: true
+        adjust:
+          shift: [0, -1.8]
+        params:
+          to: ""
+          from: ""
+          reverse: true
+          hotswap: true
